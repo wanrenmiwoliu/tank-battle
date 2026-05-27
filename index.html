@@ -741,6 +741,18 @@ function initLevel() {
     }
   }
 
+  // Clear enemy spawn area (row 1) around the three spawn columns
+  for (const sc of [1, Math.floor(COLS / 2), COLS - 2]) {
+    for (let r = 0; r <= 2; r++) {
+      for (let c = sc - 1; c <= sc + 1; c++) {
+        if (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
+          const cell = map[r][c];
+          if (cell !== '#' && cell !== '*' && cell !== 'B') map[r][c] = '.';
+        }
+      }
+    }
+  }
+
   if (!player || !player.active) {
     respawnPlayer();
   }
@@ -758,10 +770,10 @@ const ENEMY_COLORS = ['#e74c3c', '#e67e22', '#9b59b6', '#1abc9c', '#f39c12', '#c
 function spawnEnemy() {
   if (enemiesSpawned >= enemiesPerLevel) return;
 
-  const spawnCols = [0, Math.floor(COLS / 2), COLS - 1];
+  const spawnCols = [1, Math.floor(COLS / 2), COLS - 2];
   const col = spawnCols[Math.floor(Math.random() * 3)];
   const x = col * CELL + CELL / 2;
-  const y = CELL / 2;
+  const y = CELL + CELL / 2;
 
   // Check spawn area clear
   for (const e of enemies) {
